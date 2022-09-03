@@ -1,3 +1,3 @@
-module github.com/rezairfanwijaya/Validator-Reflect-GO
+module Reflect-Validate
 
 go 1.18
