@@ -6,15 +6,15 @@ import (
 	"reflect"
 )
 
-func PanicHandling() {
+func panicHandling() {
 	msg := recover()
 	if msg != nil {
 		fmt.Printf("%v [Params Must Be Single Struct]\n", msg)
 	}
 }
 
-func IsValid(data interface{}) (bool, error) {
-	defer PanicHandling()
+func Validate(data interface{}) (bool, error) {
+	defer panicHandling()
 
 	t := reflect.TypeOf(data)
 	max, err := checkData(t.NumField())
