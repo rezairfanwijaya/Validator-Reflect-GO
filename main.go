@@ -6,10 +6,24 @@ import (
 	"reflect"
 )
 
-func IsValid(data interface{}) (bool, error) {
-	t := reflect.TypeOf(data)
+func PanicHandling() {
+	msg := recover()
+	if msg != nil {
+		fmt.Printf("%v [Params Must Be Single Struct]\n", msg)
+	}
+}
 
-	for i := 0; i < t.NumField(); i++ {
+func IsValid(data interface{}) (bool, error) {
+	defer PanicHandling()
+
+	t := reflect.TypeOf(data)
+	max, err := checkData(t.NumField())
+
+	if err != nil {
+		panic("params must be struct")
+	}
+
+	for i := 0; i < max; i++ {
 		field := t.Field(i)
 		if field.Tag.Get("required") == "true" {
 			required := reflect.ValueOf(data).Field(i).Interface()
@@ -19,6 +33,13 @@ func IsValid(data interface{}) (bool, error) {
 			}
 		}
 	}
-
 	return true, nil
+}
+
+func checkData(data int) (int, error) {
+	numberOfFiled := data
+	if numberOfFiled <= 0 {
+		return numberOfFiled, errors.New("params must be struct")
+	}
+	return numberOfFiled, nil
 }
